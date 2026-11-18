@@ -163,7 +163,15 @@ function typeEffect() {
 
 }
 
-typeEffect();
+const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+).matches;
+
+if (!prefersReducedMotion && typingText) {
+    typeEffect();
+} else if (typingText) {
+    typingText.textContent = "builds security tools.";
+}
 
 
 /* =========================================
