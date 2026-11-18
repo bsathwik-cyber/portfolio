@@ -165,21 +165,13 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 
 if (!prefersReducedMotion && typingText) {
-    const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-).matches;
-
-if (!prefersReducedMotion && typingText) {
     typeEffect();
 } else if (typingText) {
     typingText.textContent = "builds security tools.";
 }
-} else if (typingText) {
-    typingText.textContent = "builds security tools.";
-}
 
 
-/* =========================================
+=======================================
    ACTIVE NAVIGATION
 ========================================= */
 
@@ -267,36 +259,20 @@ const revealElements =
         ".section-heading, .skill-card, .project-card, .cert-card, .timeline-item, .stat-card"
     );
 
-
-const revealObserver =
-    new IntersectionObserver(
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
         (entries, observer) => {
-
             entries.forEach(entry => {
-
                 if (entry.isIntersecting) {
-
                     entry.target.style.opacity = "1";
-
-                    entry.target.style.transform =
-                        "translateY(0)";
-
-                    observer.unobserve(
-                        entry.target
-                    );
-
+                    entry.target.style.transform = "translateY(0)";
+                    observer.unobserve(entry.target);
                 }
-
             });
-
         },
-        {
-            threshold: 0.12
-        }
+        { threshold: 0.12 }
     );
 
-
-if (!prefersReducedMotion && "IntersectionObserver" in window) {
     revealElements.forEach(element => {
         element.style.opacity = "0";
         element.style.transform = "translateY(25px)";
@@ -306,7 +282,7 @@ if (!prefersReducedMotion && "IntersectionObserver" in window) {
 }
 
 
-/* =========================================
+=======================================
    CURRENT YEAR
 ========================================= */
 
