@@ -22,36 +22,34 @@ window.addEventListener("scroll", () => {
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.getElementById("navMenu");
 
-menuToggle.addEventListener("click", () => {
-
-    navMenu.classList.toggle("open");
+function setMenuOpen(isOpen) {
+    navMenu.classList.toggle("open", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
 
     const icon = menuToggle.querySelector("i");
-
-    if (navMenu.classList.contains("open")) {
-        icon.classList.remove("fa-bars");
-        icon.classList.add("fa-xmark");
-    } else {
-        icon.classList.remove("fa-xmark");
-        icon.classList.add("fa-bars");
+    if (icon) {
+        icon.classList.toggle("fa-xmark", isOpen);
+        icon.classList.toggle("fa-bars", !isOpen);
     }
+}
 
+menuToggle.addEventListener("click", () => {
+    setMenuOpen(!navMenu.classList.contains("open"));
 });
 
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && navMenu.classList.contains("open")) {
+        setMenuOpen(false);
+        menuToggle.focus();
+    }
+});
 
 document.querySelectorAll(".nav-link").forEach(link => {
-
-    link.addEventListener("click", () => {
-
-        navMenu.classList.remove("open");
-
-        const icon = menuToggle.querySelector("i");
-
-        icon.classList.remove("fa-xmark");
-        icon.classList.add("fa-bars");
-
-    });
-
+    link.addEventListener("click", () => setMenuOpen(false));
 });
 
 
@@ -99,11 +97,10 @@ themeToggle.addEventListener("click", () => {
 const typingText = document.getElementById("typingText");
 
 const phrases = [
-    "solves problems.",
-    "turns ideas into code.",
-    "creates useful solutions.",
-    "keeps learning.",
-    "gets better every day."
+    "explores web security.",
+    "builds security tools.",
+    "learns network defense.",
+    "solves practical problems."
 ];
 
 let phraseIndex = 0;
@@ -168,7 +165,15 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 
 if (!prefersReducedMotion && typingText) {
+    const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+).matches;
+
+if (!prefersReducedMotion && typingText) {
     typeEffect();
+} else if (typingText) {
+    typingText.textContent = "builds security tools.";
+}
 } else if (typingText) {
     typingText.textContent = "builds security tools.";
 }
@@ -291,19 +296,14 @@ const revealObserver =
     );
 
 
-revealElements.forEach(element => {
-
-    element.style.opacity = "0";
-
-    element.style.transform =
-        "translateY(25px)";
-
-    element.style.transition =
-        "opacity .7s ease, transform .7s ease";
-
-    revealObserver.observe(element);
-
-});
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+    revealElements.forEach(element => {
+        element.style.opacity = "0";
+        element.style.transform = "translateY(25px)";
+        element.style.transition = "opacity .7s ease, transform .7s ease";
+        revealObserver.observe(element);
+    });
+}
 
 
 /* =========================================
